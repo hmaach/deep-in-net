@@ -428,10 +428,117 @@ Routers consult this table to determine the **best path** for forwarding packets
 
 ## Description
 
-<!-- Description of the network architecture and objectives -->
+This exercise demonstrates communication between three different subnets connected through multiple routers. Each subnet contains devices connected to a switch, while routers provide routing between the networks.
 
 ## Steps to Solve
 
-1. <!-- Step -->
-2. <!-- Step -->
-3. <!-- Step -->
+## 1. Configure Router1
+
+Enter CLI.
+
+```bash
+enable
+configure terminal
+```
+
+### Configure LAN interface
+
+```bash
+interface gig0/0
+ip address 192.168.1.129 255.255.255.192
+no shutdown
+exit
+```
+
+### Configure link to Router2
+
+```bash
+interface serial0/0/0
+ip address 10.10.0.1 255.255.255.252
+no shutdown
+exit
+```
+
+### Add routes
+
+```bash
+ip route 192.168.2.0 255.255.255.0 10.10.0.2
+ip route 192.168.3.160 255.255.255.240 10.10.0.2
+```
+
+---
+
+## 2. Configure Router2
+
+```bash
+enable
+configure terminal
+```
+
+### LAN interface (Subnet2)
+
+```bash
+interface gig0/0
+ip address 192.168.2.1 255.255.255.0
+no shutdown
+exit
+```
+
+### Link to Router1
+
+```bash
+interface serial0/0/0
+ip address 10.10.0.2 255.255.255.252
+no shutdown
+exit
+```
+
+### Link to Router3
+
+```bash
+interface serial0/0/1
+ip address 10.10.1.1 255.255.255.252
+no shutdown
+exit
+```
+
+### Add routes
+
+```bash
+ip route 192.168.1.128 255.255.255.192 10.10.0.1
+ip route 192.168.3.160 255.255.255.240 10.10.1.2
+```
+
+---
+
+# 3. Configure Router3
+
+```bash
+enable
+configure terminal
+```
+
+### LAN interface (Subnet3)
+
+```bash
+interface gig0/0
+ip address 192.168.3.161 255.255.255.240
+no shutdown
+exit
+```
+
+### Link to Router2
+
+```bash
+interface serial0/0/0
+ip address 10.10.1.2 255.255.255.252
+no shutdown
+exit
+```
+
+### Add routes
+
+```bash
+ip route 192.168.1.128 255.255.255.192 10.10.1.1
+ip route 192.168.2.0 255.255.255.0 10.10.1.1
+```
