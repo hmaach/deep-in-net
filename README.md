@@ -6,12 +6,6 @@
 
 This exercise demonstrates basic Ethernet cabling concepts and IP communication between devices using RJ-45 cables in Packet Tracer.
 
-## Steps to Solve
-
-1. <!-- Step -->
-2. <!-- Step -->
-3. <!-- Step -->
-
 ## Knowledge Gained
 
 ### What is an RJ-45 cable?
@@ -56,12 +50,6 @@ In modern devices, **Auto-MDI/MDIX** usually detects and adjusts the connection 
 ## Description
 
 This exercise demonstrates how a **switch** and a **hub** operate in a network, how computers communicate when connected to each device, and how traffic behavior differs under simultaneous transmissions.
-
-## Steps to Solve
-
-1. <!-- Step -->
-2. <!-- Step -->
-3. <!-- Step -->
 
 ## Knowledge Gained
 
@@ -119,12 +107,6 @@ Characteristics:
 ## Description
 
 This project demonstrates the design and configuration of a small local network using **Cisco Packet Tracer**, focusing on core network services: **DHCP, DNS, HTTPS, and FTP**.
-
-## Steps to Solve
-
-1. <!-- Step -->
-2. <!-- Step -->
-3. <!-- Step -->
 
 ## Knowledge Gained
 
@@ -225,7 +207,7 @@ Features:
 
 #### Image Explanation
 
-![Clean Architecture Diagram](./assets/RJ45j.png)
+![Clean Architecture Diagram](./assets/ftp.png)
 
 ---
 
@@ -292,12 +274,6 @@ deep-in-net.com → deep-in-net.local
 
 This exercise demonstrates how a **router enables communication between two different IP networks**.
 
-## Steps to Solve
-
-1. <!-- Step -->
-2. <!-- Step -->
-3. <!-- Step -->
-
 ## Knowledge Gained
 
 ### What is a Router?
@@ -308,7 +284,7 @@ It determines the best path for data using routing tables.
 
 #### Image Explanation
 
-![Clean Architecture Diagram](./assets/RJ45j.png)
+![Clean Architecture Diagram](./assets/router.png)
 
 ---
 
@@ -319,10 +295,6 @@ It determines the best path for data using routing tables.
 | Main Role    | Connect devices in LAN | Connect multiple networks |
 | Address Used | MAC Address            | IP Address                |
 | OSI Layer    | Layer 2                | Layer 3                   |
-
-#### Image Explanation
-
-![Clean Architecture Diagram](./assets/RJ45j.png)
 
 ---
 
@@ -338,7 +310,7 @@ Their main tasks include:
 
 #### Image Explanation
 
-![Clean Architecture Diagram](./assets/RJ45j.png)
+![Clean Architecture Diagram](./assets/osi-router.webp)
 
 ---
 
@@ -357,10 +329,6 @@ Gateway: 192.168.1.1
 
 ```
 
-#### Image Explanation
-
-![Clean Architecture Diagram](./assets/RJ45j.png)
-
 ---
 
 # Exercise 5
@@ -369,12 +337,6 @@ Gateway: 192.168.1.1
 
 This exercise demonstrates communication within local networks connected to switches and communication between different subnets through a router.
 
-## Steps to Solve
-
-1. <!-- Step -->
-2. <!-- Step -->
-3. <!-- Step -->
-
 ---
 
 # Exercise 6
@@ -382,12 +344,6 @@ This exercise demonstrates communication within local networks connected to swit
 ## Description
 
 This exercise demonstrates communication between two separate local networks connected through two routers. Since each router only knows its directly connected networks by default, static routes are configured to enable end-to-end connectivity.
-
-## Steps to Solve
-
-1. <!-- Step -->
-2. <!-- Step -->
-3. <!-- Step -->
 
 ## Knowledge Gained
 
@@ -406,7 +362,7 @@ Routers consult this table to determine the **best path** for forwarding packets
 
 #### Image Explanation
 
-![Clean Architecture Diagram](./assets/RJ45j.png)
+![Clean Architecture Diagram](./assets/routing-table.jpg)
 
 ---
 
@@ -428,24 +384,34 @@ Routers consult this table to determine the **best path** for forwarding packets
 
 ## Description
 
-This exercise demonstrates communication between three different subnets connected through multiple routers. Each subnet contains devices connected to a switch, while routers provide routing between the networks.
+This exercise demonstrates communication between three different subnets connected through multiple routers. Each subnet contains devices connected to a switch, while routers provide routing between the networks. The exercise covers:
+
+- Configuring router interfaces for LANs and serial links
+- Adding static routes to enable inter-subnet communication
+- Understanding first-ping delays due to ARP resolution
+
+> Note: In Packet Tracer, the first ping to a device in a different subnet may fail due to ARP requests. Subsequent pings should succeed.
+
+---
 
 ## Steps to Solve
 
+---
+
 ## 1. Configure Router1
 
-Enter CLI.
+Enter CLI:
 
 ```bash
 enable
 configure terminal
 ```
 
-### Configure LAN interface
+### Configure LAN interface (Subnet1)
 
 ```bash
-interface gig0/0
-ip address 192.168.1.129 255.255.255.192
+interface se0/0
+ip address 192.168.1.193 255.255.255.192
 no shutdown
 exit
 ```
@@ -453,13 +419,13 @@ exit
 ### Configure link to Router2
 
 ```bash
-interface serial0/0/0
+interface se0/1
 ip address 10.10.0.1 255.255.255.252
 no shutdown
 exit
 ```
 
-### Add routes
+### Add static routes
 
 ```bash
 ip route 192.168.2.0 255.255.255.0 10.10.0.2
@@ -470,6 +436,8 @@ ip route 192.168.3.160 255.255.255.240 10.10.0.2
 
 ## 2. Configure Router2
 
+Enter CLI:
+
 ```bash
 enable
 configure terminal
@@ -478,7 +446,7 @@ configure terminal
 ### LAN interface (Subnet2)
 
 ```bash
-interface gig0/0
+interface se0/0
 ip address 192.168.2.1 255.255.255.0
 no shutdown
 exit
@@ -487,7 +455,7 @@ exit
 ### Link to Router1
 
 ```bash
-interface serial0/0/0
+interface se0/1
 ip address 10.10.0.2 255.255.255.252
 no shutdown
 exit
@@ -496,22 +464,26 @@ exit
 ### Link to Router3
 
 ```bash
-interface serial0/0/1
+interface se0/2
 ip address 10.10.1.1 255.255.255.252
 no shutdown
 exit
 ```
 
-### Add routes
+### Add static routes
 
 ```bash
-ip route 192.168.1.128 255.255.255.192 10.10.0.1
+ip route 192.168.1.192 255.255.255.192 10.10.0.1
 ip route 192.168.3.160 255.255.255.240 10.10.1.2
 ```
 
+> **Note:** Router2 must point to the correct Subnet1 (`192.168.1.192/26`) to ensure replies from Subnet2/Subnet3 reach Subnet1 correctly.
+
 ---
 
-# 3. Configure Router3
+## 3. Configure Router3
+
+Enter CLI:
 
 ```bash
 enable
@@ -521,7 +493,7 @@ configure terminal
 ### LAN interface (Subnet3)
 
 ```bash
-interface gig0/0
+interface se0/0
 ip address 192.168.3.161 255.255.255.240
 no shutdown
 exit
@@ -530,15 +502,49 @@ exit
 ### Link to Router2
 
 ```bash
-interface serial0/0/0
+interface se0/1
 ip address 10.10.1.2 255.255.255.252
 no shutdown
 exit
 ```
 
-### Add routes
+### Add static routes
 
 ```bash
-ip route 192.168.1.128 255.255.255.192 10.10.1.1
+ip route 192.168.1.192 255.255.255.192 10.10.1.1
 ip route 192.168.2.0 255.255.255.0 10.10.1.1
 ```
+
+---
+
+## 4. Configure PCs
+
+- **Subnet1 PC example:**
+  - IP: `192.168.1.198`
+  - Subnet mask: `255.255.255.192`
+  - Gateway: `192.168.1.193`
+
+- **Subnet2 PC example:**
+  - IP: `192.168.2.10`
+  - Subnet mask: `255.255.255.0`
+  - Gateway: `192.168.2.1`
+
+- **Subnet3 PC example:**
+  - IP: `192.168.3.165`
+  - Subnet mask: `255.255.255.240`
+  - Gateway: `192.168.3.161`
+
+> **Important:** First ping from one subnet to another may fail due to ARP resolution. Subsequent pings should succeed.
+
+---
+
+## 5. Test Connectivity
+
+From each PC:
+
+```bash
+ping <gateway>   # Test local connectivity
+ping <other subnet PC>  # Test inter-subnet connectivity
+```
+
+- If the first ping fails but the second succeeds, this is normal (ARP learning).
