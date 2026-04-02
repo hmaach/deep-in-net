@@ -19,7 +19,7 @@ It contains **8 copper wires arranged in 4 twisted pairs**, which are used to tr
 
 #### -> Straight-Through Cable
 
-A **straight-through cable** uses the **same wiring standard on both ends** (either T568A–T568A or T568B–T568B).
+A **straight-through cable** uses the **same wiring standard on both ends**.
 
 It is typically used to connect **different types of devices**, such as:
 
@@ -37,9 +37,9 @@ It is used to connect **similar devices directly**, such as:
 - Switch → Switch
 - Router → Router
 
-In modern devices, **Auto-MDI/MDIX** usually detects and adjusts the connection automatically.
-
 #### Image Explanation
+
+![Clean Architecture Diagram](./assets/transmit-recieve.png)
 
 ![Clean Architecture Diagram](./assets/RJ45.png)
 
@@ -82,7 +82,6 @@ Characteristics:
 - Operates at **OSI Layer 1 (Physical Layer)**
 - Does **not analyze MAC or IP addresses**
 - All devices share **one collision domain**
-- Uses **half-duplex communication**
 
 ---
 
@@ -548,3 +547,7 @@ ping <other subnet PC>  # Test inter-subnet connectivity
 ```
 
 - If the first ping fails but the second succeeds, this is normal (ARP learning).
+
+# more infos:
+
+![Clean Architecture Diagram](./assets/osi.png)
