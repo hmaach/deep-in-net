@@ -82,6 +82,7 @@ Characteristics:
 - Operates at **OSI Layer 1 (Physical Layer)**
 - Does **not analyze MAC or IP addresses**
 - All devices share **one collision domain**
+- Uses **half-duplex communication**
 
 ---
 
@@ -158,6 +159,12 @@ This allows users to access services without remembering numeric IP addresses.
 #### Image Explanation
 
 ![Clean Architecture Diagram](./assets/dns.webp)
+
+- **DNS** Server types:
+  ![Clean Architecture Diagram](./assets/dns.png)
+
+- Ho DNS works
+  ![Clean Architecture Diagram](./assets/how-dns-works.png)
 
  <!-- https://www.keycdn.com/support/what-is-a-dns-server -->
 
@@ -369,13 +376,129 @@ Routers consult this table to determine the **best path** for forwarding packets
 
 ## Description
 
-<!-- Description of the network architecture and objectives -->
+Create the network shown in **ex07-scenario** using Cisco Packet Tracer.
 
-## Steps to Solve
+### Requirements
 
-1. <!-- Step -->
-2. <!-- Step -->
-3. <!-- Step -->
+- All devices connected to the same switch must communicate with each other.
+- All devices in **Subnet 1** must communicate with devices in **Subnet 2**.
+- All devices in **Subnet 2** must communicate with devices in **Subnet 1**.
+
+---
+
+### Subnet 1 (Left Side)
+
+- Network: `192.168.1.0/24`
+- Switch1 connected to:
+  - PC1
+  - PC2
+  - PC3
+  - PC4
+  - PC5
+
+- Router1 connected to Switch1
+
+### Subnet 2 (Right Side)
+
+- Network: `192.168.2.0/24`
+- Switch2 connected to:
+  - Laptop0
+  - PC6
+  - PC7
+  - PC8
+
+- Router2 connected to Switch2
+
+### Router-to-Router Link
+
+- Network: `10.10.0.0/30`
+- Used for inter-router communication
+
+---
+
+## IP Addressing Plan
+
+### Subnet 1
+
+| Device  | IP Address  | Subnet Mask   | Gateway     |
+| ------- | ----------- | ------------- | ----------- |
+| Router1 | 192.168.1.1 | 255.255.255.0 | —           |
+| PC1     | 192.168.1.2 | 255.255.255.0 | 192.168.1.1 |
+| PC2     | 192.168.1.3 | 255.255.255.0 | 192.168.1.1 |
+| PC3     | 192.168.1.4 | 255.255.255.0 | 192.168.1.1 |
+| PC4     | 192.168.1.5 | 255.255.255.0 | 192.168.1.1 |
+| PC5     | 192.168.1.6 | 255.255.255.0 | 192.168.1.1 |
+
+---
+
+### Subnet 2
+
+| Device  | IP Address  | Subnet Mask   | Gateway     |
+| ------- | ----------- | ------------- | ----------- |
+| Router2 | 192.168.2.1 | 255.255.255.0 | —           |
+| Laptop0 | 192.168.2.2 | 255.255.255.0 | 192.168.2.1 |
+| PC6     | 192.168.2.3 | 255.255.255.0 | 192.168.2.1 |
+| PC7     | 192.168.2.4 | 255.255.255.0 | 192.168.2.1 |
+| PC8     | 192.168.2.5 | 255.255.255.0 | 192.168.2.1 |
+
+---
+
+### Router Interconnection
+
+| Device  | Interface | IP Address | Mask            |
+| ------- | --------- | ---------- | --------------- |
+| Router1 | Serial    | 10.10.0.1  | 255.255.255.252 |
+| Router2 | Serial    | 10.10.0.2  | 255.255.255.252 |
+
+---
+
+## Router Configuration
+
+### Router1
+
+```bash
+enable
+configure terminal
+
+interface Fa0/0
+ip address 192.168.1.1 255.255.255.0
+no shutdown
+
+interface Se2/0
+ip address 10.10.0.1 255.255.255.252
+no shutdown
+
+ip route 192.168.2.0 255.255.255.0 10.10.0.2
+```
+
+---
+
+### Router2
+
+```bash
+enable
+configure terminal
+
+interface Fa0/0
+ip address 192.168.2.1 255.255.255.0
+no shutdown
+
+interface Se2/0
+ip address 10.10.0.2 255.255.255.252
+no shutdown
+
+ip route 192.168.1.0 255.255.255.0 10.10.0.1
+```
+
+---
+
+### Check Routing Table
+
+On routers:
+
+```bash
+show ip route
+```
 
 ---
 
@@ -551,3 +674,4 @@ ping <other subnet PC>  # Test inter-subnet connectivity
 # more infos:
 
 ![Clean Architecture Diagram](./assets/osi.png)
+![IPv4 classess](./assets/ipv4.png)
